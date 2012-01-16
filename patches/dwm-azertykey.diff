@@ -1,6 +1,6 @@
-diff -up dwm-5.8.2//config.def.h dwm-5.8.2-fr//config.def.h
---- dwm-5.8.2//config.def.h	2010-06-04 12:39:15.000000000 +0200
-+++ dwm-5.8.2-fr//config.def.h	2011-04-21 08:49:36.000000000 +0200
+diff -up dwm-5.8.2/config.def.h dwm-5.8.2-fr/config.def.h
+--- dwm-5.8.2/config.def.h	2010-06-04 12:39:15.000000000 +0200
++++ dwm-5.8.2-fr/config.def.h	2011-04-21 08:49:36.000000000 +0200
 @@ -65,21 +65,21 @@ static Key keys[] = {
  	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
  	{ MODKEY,                       XK_space,  setlayout,      {0} },

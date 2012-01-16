@@ -82,7 +82,7 @@ static Key keys[] = {
 	TAGKEYS(                        0x28,                      4)
 	TAGKEYS(                        0x2d,                      5)
 	TAGKEYS(                        0xe8,                      6)
-	TAGKEYS(                        0x5f,                      7)
+	TAGKEYS(                        0x21,                      7)
 	TAGKEYS(                        0xe7,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 	{ Mod1Mask|ControlMask,         XK_l,      spawn,          {.v = lockscreencmd } },

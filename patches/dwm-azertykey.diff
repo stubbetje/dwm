@@ -36,9 +36,3 @@ diff -up dwm-5.8.2/config.def.h dwm-5.8.2-fr/config.def.h
  	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
  };
  
-@@ -99,4 +99,3 @@ static Button buttons[] = {
- 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
- 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
- };
--
-Seulement dans dwm-5.8.2/: config.def.h.rej

@@ -60,7 +60,7 @@ enum { CurNormal, CurResize, CurMove, CurLast };        /* cursor */
 enum { ColBorder, ColFG, ColBG, ColLast };              /* color */
 enum { NetSupported, NetWMName, NetWMState,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
-       NetWMWindowTypeDialog, NetLast };     /* EWMH atoms */
+       NetWMWindowTypeDialog, NetWMWindowOpacity, NetLast };     /* EWMH atoms */
 enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMLast }; /* default atoms */
 enum { ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
        ClkClientWin, ClkRootWin, ClkLast };             /* clicks */
@@ -95,6 +95,7 @@ struct Client {
 	Client *snext;
 	Monitor *mon;
 	Window win;
+	double opacity;
 };
 
 typedef struct {
@@ -245,6 +246,7 @@ static void updatewindowtype(Client *c);
 static void updatetitle(Client *c);
 static void updatewmhints(Client *c);
 static void view(const Arg *arg);
+static void window_opacity_set(Client *c, double opacity);
 static Client *wintoclient(Window w);
 static Monitor *wintomon(Window w);
 static int xerror(Display *dpy, XErrorEvent *ee);
@@ -847,6 +849,13 @@ focus(Client *c) {
 	/* was if(selmon->sel) */
 	if(selmon->sel && selmon->sel != c)
 		unfocus(selmon->sel, False);
+
+	if(selmon->sel && c!=selmon->sel && c && (!root || (selmon->sel->win!=root && c->win!=root)) ) {
+		window_opacity_set(selmon->sel, shade);
+	}
+	if(c && c!=selmon->sel && (!root || (c->win!=root)) ) {
+		window_opacity_set(c, c->opacity);
+	}
 	if(c) {
 		if(c->mon != selmon)
 			selmon = c->mon;
@@ -862,6 +871,9 @@ focus(Client *c) {
 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
 	selmon->sel = c;
 	drawbars();
+	if(c) {
+		window_opacity_set(c, c->opacity);
+	}
 }
 
 void
@@ -1603,6 +1615,7 @@ setup(void) {
 	netatom[NetActiveWindow] = XInternAtom(dpy, "_NET_ACTIVE_WINDOW", False);
 	netatom[NetSupported] = XInternAtom(dpy, "_NET_SUPPORTED", False);
 	netatom[NetWMName] = XInternAtom(dpy, "_NET_WM_NAME", False);
+	netatom[NetWMWindowOpacity] = XInternAtom(dpy, "_NET_WM_WINDOW_OPACITY" , False);
 	netatom[NetWMState] = XInternAtom(dpy, "_NET_WM_STATE", False);
 	netatom[NetWMFullscreen] = XInternAtom(dpy, "_NET_WM_STATE_FULLSCREEN", False);
 	netatom[NetWMWindowType] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", False);
@@ -2050,6 +2063,16 @@ view(const Arg *arg) {
 		selmon->tagset[selmon->seltags] = arg->ui & TAGMASK;
 	focus(NULL);
 	arrange(selmon);
+}
+
+void
+window_opacity_set(Client *c, double opacity) {
+	if(opacity >= 0 && opacity <=1) {
+		unsigned long real_opacity[] = { opacity * 0xffffffff };
+		XChangeProperty(dpy, c->win, netatom[NetWMWindowOpacity], XA_CARDINAL, 32, PropModeReplace, (unsigned char *)real_opacity, 1);
+	} else  {
+		XDeleteProperty(dpy, c->win, netatom[NetWMWindowOpacity]);
+	}
 }
 
 Client *

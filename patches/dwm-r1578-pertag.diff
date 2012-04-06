@@ -31,7 +31,7 @@ diff --git a/dwm.c b/dwm.c
  	const char *instance;
 @@ -281,6 +260,33 @@
  /* configuration, allows nested code to access above variables */
- #include "config.h"
+ #include "config.def.h"
  
 +struct Monitor {
 +	char ltsymbol[16];
